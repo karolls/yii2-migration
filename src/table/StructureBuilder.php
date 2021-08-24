@@ -337,6 +337,12 @@ final class StructureBuilder implements StructureBuilderInterface
 
             $foreignKeys = $structure->getForeignKeys();
             $indexes = $structure->getIndexes();
+            $primary = $structure->getPrimaryKey();
+
+            if ($primary) {
+                $indexes[$primary->getName()] = $primary;
+            }
+
             /** @var ForeignKeyInterface $foreignKey */
             foreach ($foreignKeys as $foreignKey) {
                 $foreignKeyColumns = $foreignKey->getColumns();
@@ -344,15 +350,9 @@ final class StructureBuilder implements StructureBuilderInterface
                 /** @var IndexInterface $index */
                 foreach ($indexes as $index) {
                     $indexColumns = $index->getColumns();
-                    $intersection = array_intersect($foreignKeyColumns, $indexColumns);
-                    if (
-                        count(
-                            array_merge(
-                                array_diff($foreignKeyColumns, $intersection),
-                                array_diff($indexColumns, $intersection)
-                            )
-                        ) === 0
-                    ) {
+                    $intersection = array_intersect_assoc($foreignKeyColumns, $indexColumns);
+
+                    if (count($foreignKeyColumns) == count($intersection)) {
                         $foundIndex = true;
                         break;
                     }
