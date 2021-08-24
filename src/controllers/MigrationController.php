@@ -107,6 +107,8 @@ class MigrationController extends BaseMigrationController
      */
     public $fileMode;
 
+    public $delay = true;
+
     /**
      * @var string|int|array<int|string, int|string> the user and/or group ownership to be set for newly generated
      * migration files. If not set, the ownership will be determined by the current environment.
@@ -133,7 +135,8 @@ class MigrationController extends BaseMigrationController
             'migrationPath',
             'migrationTable',
             'useTablePrefix',
-            'excludeTables'
+            'excludeTables',
+            'delay'
         ];
         $updateOptions = ['onlyShow', 'skipMigrations', 'experimental'];
 
@@ -165,6 +168,7 @@ class MigrationController extends BaseMigrationController
                 'tp' => 'useTablePrefix',
                 'fm' => 'fileMode',
                 'fo' => 'fileOwnership',
+                'd' => 'delay',
             ]
         );
     }
@@ -652,6 +656,10 @@ class MigrationController extends BaseMigrationController
         $this->stdout(" > Saved as '{$file}'\n");
 
         $this->fixHistory($migrationClassName);
+
+        if ($this->delay) {
+            sleep(1);
+        }
     }
 
     /**
@@ -682,6 +690,10 @@ class MigrationController extends BaseMigrationController
         $this->stdout(" > Saved as '{$file}'");
 
         $this->fixHistory($migrationClassName);
+
+        if ($this->delay) {
+            sleep(1);
+        }
     }
 
     /**
@@ -718,6 +730,10 @@ class MigrationController extends BaseMigrationController
         $this->stdout(" > Saved as '{$file}'");
 
         $this->fixHistory($migrationClassName);
+
+        if ($this->delay) {
+            sleep(1);
+        }
     }
 
     /**
